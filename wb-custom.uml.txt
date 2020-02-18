@@ -16,138 +16,58 @@ class "accounts_user" {
 }
 
 class "contacts_organization" {
-  + id [PK]
-  --
   name
   is_private_person
 }
 
 class "contacts_person" {
-  + id [PK]
-  --
   given_name
   family_name
 }
 
-class "invoices_invoice" {
-  + id [PK]
-  --
-  subtotal
-  discount
-  liable_to_vat
-  tax_rate
-  total
-  invoiced_on
-  due_on
-  closed_on
-  title
-  description
-  created_at
-  status
-  type
-  down_payment_total
-  postal_address
-  _code
-  payment_notice
-  contact_id
-  customer_id
-  down_payment_applied_to_id
-  owned_by_id
-  project_id
-  third_party_costs
-  last_reminded_on
-  show_service_details
-  total_excl_tax
-}
-
 class "logbook_loggedcost" {
-  + id [PK]
-  --
-  created_at
   rendered_on
   cost
   third_party_costs
   description
-  archived_at
-  created_by_id
-  service_id
-  invoice_service_id
-  are_expenses
-  rendered_by_id
-  expense_report_id
-  expense_cost
-  expense_currency
 }
 
 class "logbook_loggedhours" {
-  + id [PK]
-  --
-  created_at
   rendered_on
   hours
   description
-  archived_at
-  created_by_id
-  rendered_by_id
-  service_id
-  invoice_service_id
 }
 
 class "offers_offer" {
-  + id [PK]
-  --
-  subtotal
-  discount
-  liable_to_vat
-  tax_rate
-  total
-  created_at
   offered_on
-  closed_on
   title
   description
   status
   postal_address
-  _code
-  owned_by_id
-  project_id
-  show_service_details
+  subtotal
+  discount
+  liable_to_vat
   total_excl_tax
+  tax_rate
+  total
 }
 
 class "projects_project" {
-  + id [PK]
-  --
   title
   description
-  created_at
-  _code
-  contact_id
-  customer_id
-  owned_by_id
-  closed_on
   type
-  flat_rate
 }
 
 class "projects_service" {
-  + id [PK]
-  --
-  created_at
   title
   description
   effort_hours
-  cost
-  offer_id
-  project_id
   effort_rate
   effort_type
-  service_cost
-  service_hours
+  cost
   third_party_costs
-  is_optional
-  role_id
-  allow_logging
+  /service_cost
+  /service_hours
 }
 
 class "services_servicetype" {
@@ -155,17 +75,9 @@ class "services_servicetype" {
   hourly_rate
 }
 
- accounts_user "1..n" -down- "0..n" accounts_team : member of >
+ accounts_user "1..n" -- "0..n" accounts_team : member of >
 
- contacts_person "0..n" -left- "0..1" contacts_organization : employed by >
-
- invoices_invoice "0..n" -- "0..1" contacts_person : contact >
-
- invoices_invoice "0..n" -- "1" contacts_organization : invoiced to >
-
- invoices_invoice "0..n" -- "0..1" invoices_invoice : down payment applied to >
-
- invoices_invoice "0..n" -- "0..1" projects_project
+ contacts_person "0..n" -- "0..1" contacts_organization : employed by >
 
  logbook_loggedcost "0..n" -- "1" accounts_user : rendered by >
 
@@ -175,7 +87,7 @@ class "services_servicetype" {
 
  logbook_loggedhours "0..n" -- "1" projects_service : logged on >
 
- offers_offer "0..n" -left- "1" projects_project : belongs to >
+ offers_offer "0..n" -- "1" projects_project : belongs to >
 
  projects_project "0..n" -- "0..1" contacts_person : contact >
 
