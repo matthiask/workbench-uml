@@ -1,0 +1,188 @@
+@startuml
+
+skinparam monochrome true
+skinparam classStereotypeFontSize 10
+
+class "accounts_team" {
+  name
+}
+
+class "accounts_user" {
+  email
+  short_name
+  full_name
+  is_active
+  enforce_same_week_logging
+}
+
+class "contacts_organization" {
+  + id [PK]
+  --
+  name
+  is_private_person
+}
+
+class "contacts_person" {
+  + id [PK]
+  --
+  given_name
+  family_name
+}
+
+class "invoices_invoice" {
+  + id [PK]
+  --
+  subtotal
+  discount
+  liable_to_vat
+  tax_rate
+  total
+  invoiced_on
+  due_on
+  closed_on
+  title
+  description
+  created_at
+  status
+  type
+  down_payment_total
+  postal_address
+  _code
+  payment_notice
+  contact_id
+  customer_id
+  down_payment_applied_to_id
+  owned_by_id
+  project_id
+  third_party_costs
+  last_reminded_on
+  show_service_details
+  total_excl_tax
+}
+
+class "logbook_loggedcost" {
+  + id [PK]
+  --
+  created_at
+  rendered_on
+  cost
+  third_party_costs
+  description
+  archived_at
+  created_by_id
+  service_id
+  invoice_service_id
+  are_expenses
+  rendered_by_id
+  expense_report_id
+  expense_cost
+  expense_currency
+}
+
+class "logbook_loggedhours" {
+  + id [PK]
+  --
+  created_at
+  rendered_on
+  hours
+  description
+  archived_at
+  created_by_id
+  rendered_by_id
+  service_id
+  invoice_service_id
+}
+
+class "offers_offer" {
+  + id [PK]
+  --
+  subtotal
+  discount
+  liable_to_vat
+  tax_rate
+  total
+  created_at
+  offered_on
+  closed_on
+  title
+  description
+  status
+  postal_address
+  _code
+  owned_by_id
+  project_id
+  show_service_details
+  total_excl_tax
+}
+
+class "projects_project" {
+  + id [PK]
+  --
+  title
+  description
+  created_at
+  _code
+  contact_id
+  customer_id
+  owned_by_id
+  closed_on
+  type
+  flat_rate
+}
+
+class "projects_service" {
+  + id [PK]
+  --
+  created_at
+  title
+  description
+  effort_hours
+  cost
+  offer_id
+  project_id
+  effort_rate
+  effort_type
+  service_cost
+  service_hours
+  third_party_costs
+  is_optional
+  role_id
+  allow_logging
+}
+
+class "services_servicetype" {
+  title
+  hourly_rate
+}
+
+ accounts_user "1..n" -down- "0..n" accounts_team : member of >
+
+ contacts_person "0..n" -left- "0..1" contacts_organization : employed by >
+
+ invoices_invoice "0..n" -- "0..1" contacts_person : contact >
+
+ invoices_invoice "0..n" -- "1" contacts_organization : invoiced to >
+
+ invoices_invoice "0..n" -- "0..1" invoices_invoice : down payment applied to >
+
+ invoices_invoice "0..n" -- "0..1" projects_project
+
+ logbook_loggedcost "0..n" -- "1" accounts_user : rendered by >
+
+ logbook_loggedcost "0..n" -- "1" projects_service : logged on >
+
+ logbook_loggedhours "0..n" -- "1" accounts_user : rendered by >
+
+ logbook_loggedhours "0..n" -- "1" projects_service : logged on >
+
+ offers_offer "0..n" -left- "1" projects_project : belongs to >
+
+ projects_project "0..n" -- "0..1" contacts_person : contact >
+
+ projects_project "0..n" -- "1" contacts_organization : customer >
+
+ projects_service "1..n" -- "0..1" offers_offer : offered with >
+
+ projects_service "0..n" -- "1" projects_project
+
+@enduml
