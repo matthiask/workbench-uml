@@ -25,13 +25,6 @@ class "Person" {
   family_name
 }
 
-class "Erfasste Kosten" {
-  rendered_on: date
-  cost
-  third_party_costs
-  description
-}
-
 class "Erfasste Stunden" {
   rendered_on: date
   hours
@@ -78,10 +71,6 @@ class "Leistungstyp" {
  User "1..n" -- "0..n" Team : member of >
 
  Person "0..n" -- "0..1" Organisation : employed by >
-
- "Erfasste Kosten" "0..n" -- "1" User : rendered by >
-
- "Erfasste Kosten" "0..n" -- "1" Leistung : logged on >
 
  "Erfasste Stunden" "0..n" -- "1" User : rendered by >
 
