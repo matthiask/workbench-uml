@@ -3,11 +3,11 @@
 skinparam monochrome true
 skinparam classStereotypeFontSize 10
 
-class "accounts_team" {
+class "Team" {
   name
 }
 
-class "accounts_user" {
+class "User" {
   email
   short_name
   full_name
@@ -15,31 +15,31 @@ class "accounts_user" {
   enforce_same_week_logging
 }
 
-class "contacts_organization" {
+class "Organisation" {
   name
   is_private_person
 }
 
-class "contacts_person" {
+class "Person" {
   given_name
   family_name
 }
 
-class "logbook_loggedcost" {
-  rendered_on
+class "Erfasste Kosten" {
+  rendered_on: date
   cost
   third_party_costs
   description
 }
 
-class "logbook_loggedhours" {
-  rendered_on
+class "Erfasste Stunden" {
+  rendered_on: date
   hours
   description
 }
 
-class "offers_offer" {
-  offered_on
+class "Offerte" {
+  offered_on: date
   title
   description
   status
@@ -52,13 +52,13 @@ class "offers_offer" {
   total
 }
 
-class "projects_project" {
+class "Projekt" {
   title
   description
   type
 }
 
-class "projects_service" {
+class "Leistung" {
   title
   description
   effort_hours
@@ -70,31 +70,31 @@ class "projects_service" {
   /service_hours
 }
 
-class "services_servicetype" {
+class "Leistungstyp" {
   title
   hourly_rate
 }
 
- accounts_user "1..n" -- "0..n" accounts_team : member of >
+ User "1..n" -- "0..n" Team : member of >
 
- contacts_person "0..n" -- "0..1" contacts_organization : employed by >
+ Person "0..n" -- "0..1" Organisation : employed by >
 
- logbook_loggedcost "0..n" -- "1" accounts_user : rendered by >
+ "Erfasste Kosten" "0..n" -- "1" User : rendered by >
 
- logbook_loggedcost "0..n" -- "1" projects_service : logged on >
+ "Erfasste Kosten" "0..n" -- "1" Leistung : logged on >
 
- logbook_loggedhours "0..n" -- "1" accounts_user : rendered by >
+ "Erfasste Stunden" "0..n" -- "1" User : rendered by >
 
- logbook_loggedhours "0..n" -- "1" projects_service : logged on >
+ "Erfasste Stunden" "0..n" -- "1" Leistung : logged on >
 
- offers_offer "0..n" -- "1" projects_project : belongs to >
+ Offerte "0..n" -- "1" Projekt : belongs to >
 
- projects_project "0..n" -- "0..1" contacts_person : contact >
+ Projekt "0..n" -- "0..1" Person : contact >
 
- projects_project "0..n" -- "1" contacts_organization : customer >
+ Projekt "0..n" -- "1" Organisation : customer >
 
- projects_service "1..n" -- "0..1" offers_offer : offered with >
+ Leistung "1..n" -- "0..1" Offerte : offered with >
 
- projects_service "0..n" -- "1" projects_project
+ Leistung "0..n" -- "1" Projekt
 
 @enduml
