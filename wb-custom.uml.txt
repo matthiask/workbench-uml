@@ -15,16 +15,6 @@ class "User" {
   enforce_same_week_logging
 }
 
-class "Organisation" {
-  name
-  is_private_person
-}
-
-class "Person" {
-  given_name
-  family_name
-}
-
 class "Erfasste Stunden" {
   rendered_on: date
   hours
@@ -37,12 +27,12 @@ class "Offerte" {
   description
   status
   postal_address
-  subtotal
+  /subtotal
   discount
   liable_to_vat
-  total_excl_tax
+  /total_excl_tax
   tax_rate
-  total
+  /total
 }
 
 class "Projekt" {
@@ -63,24 +53,13 @@ class "Leistung" {
   /service_hours
 }
 
-class "Leistungstyp" {
-  title
-  hourly_rate
-}
-
  User "1..n" -- "0..n" Team : member of >
-
- Person "0..n" -- "0..1" Organisation : employed by >
 
  "Erfasste Stunden" "0..n" -- "1" User : rendered by >
 
  "Erfasste Stunden" "0..n" -- "1" Leistung : logged on >
 
  Offerte "0..n" -- "1" Projekt : belongs to >
-
- Projekt "0..n" -- "0..1" Person : contact >
-
- Projekt "0..n" -- "1" Organisation : customer >
 
  Leistung "1..n" -- "0..1" Offerte : offered with >
 
